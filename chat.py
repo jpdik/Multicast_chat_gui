@@ -22,7 +22,6 @@ class Chat(object):
         builder = Gtk.Builder() #Instancia do Gtk
         builder.add_from_file("chat.glade") #Função para carregar o arquivo
     
-    
         #Widget da janela conectar
         self.window1 = builder.get_object("window1")
 
@@ -87,7 +86,7 @@ class Chat(object):
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-        sock.sendto(json.dumps(data), (MCAST_GRP, MCAST_PORT))
+        sock.sendto(json.dumps(data), (self.ip_entry, MCAST_PORT))
         self.message_entry.set_text("")
 
     def conectar(self, widget):
@@ -115,7 +114,7 @@ def chat(self, widget):
     meunick = self.nickname_entry.get_text()
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind(('', MCAST_PORT))  # use MCAST_GRP instead of '' to listen only
+    sock.bind((self.ip_entry, MCAST_PORT))  # use MCAST_GRP instead of '' to listen only
                                     # to MCAST_GRP, not all groups on MCAST_PORT
     sock.settimeout(1)
     mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
@@ -127,6 +126,7 @@ def chat(self, widget):
             data, addr = sock.recvfrom(10240)
             data = json.loads(data)
             self.escrever(addr, data)
+            sock.recvfrom(10240) #ignore second(duplicate)
         except socket.timeout:
             continue
     
