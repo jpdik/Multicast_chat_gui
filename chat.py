@@ -86,7 +86,7 @@ class Chat(object):
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-        sock.sendto(json.dumps(data), (self.ip_entry, MCAST_PORT))
+        sock.sendto(json.dumps(data), (self.ip_entry.get_text(), MCAST_PORT))
         self.message_entry.set_text("")
 
     def conectar(self, widget):
@@ -114,7 +114,7 @@ def chat(self, widget):
     meunick = self.nickname_entry.get_text()
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind((self.ip_entry, MCAST_PORT))  # use MCAST_GRP instead of '' to listen only
+    sock.bind((self.ip_entry.get_text(), MCAST_PORT))  # use MCAST_GRP instead of '' to listen only
                                     # to MCAST_GRP, not all groups on MCAST_PORT
     sock.settimeout(1)
     mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
