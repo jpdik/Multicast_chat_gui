@@ -117,7 +117,7 @@ def chat(self, widget):
     sock.bind((self.ip_entry.get_text(), MCAST_PORT))  # use MCAST_GRP instead of '' to listen only
                                     # to MCAST_GRP, not all groups on MCAST_PORT
     sock.settimeout(1)
-    mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
+    mreq = struct.pack("4sl", socket.inet_aton(self.ip_entry.get_text()), socket.INADDR_ANY)
 
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
